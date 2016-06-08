@@ -26,7 +26,7 @@ class Todo: Identity {
 
 protocol ObjectStoreProtocol: class {
     associatedtype Object: Identity
-    var objects: [Object] { get set }
+    var todos: [Object] { get set }
     
     func add(object: Object)
     func remove(object: Object)
@@ -39,25 +39,27 @@ protocol ObjectStoreProtocol: class {
 
 extension ObjectStoreProtocol {
     func add(object: Object) {
-        return objects.append(object)
+        print(object)
+        print(todos)
+        return todos.append(object)
     }
     
     func remove(object: Object) {
-        self.objects = self.objects.filter({ (objects) -> Bool in
-            return object.id != object.id
+        self.todos = self.todos.filter({ (todos) -> Bool in
+            return object.id != todos.id
         })
     }
     
     func objectAtIndex(index: Int) -> Object {
-        return objects[index]
+        return self.todos[index]
     }
     
     func count() -> Int {
-        return self.objects.count
+        return self.todos.count
     }
     
     func allObjects() -> [Object] {
-        return self.objects
+        return self.todos
     }
 }
 
@@ -68,7 +70,7 @@ class Store: ObjectStoreProtocol {
     private init() {}
     typealias Object = Todo
     
-    var objects = [Object]()
+    var todos = [Object]()
 }
 
 //Demonstrate adding / removing of ToDo items.
@@ -83,6 +85,9 @@ Store.shared.add(taskThree)
 
 Store.shared.remove(taskTwo)
 
-for object in Store.shared.allObjects() {
-    print("Hey you there, \(object.description)")
+for todo in Store.shared.allObjects() {
+    print("Hey you there, \(todo.description)")
 }
+
+Store.shared.allObjects()
+Store.shared.count()
