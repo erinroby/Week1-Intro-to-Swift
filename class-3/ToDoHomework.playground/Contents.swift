@@ -18,43 +18,71 @@ class Todo: Identity {
     }
     
     func description() -> String {
-        return "\(self.task)"
+        return "\(self.task)!"
     }
 }
 
 //Define ObjectStore protocol with these functions: add:, remove:, objectAtIndex:, count, allObjects.
 
-protocol ObjectStoreProtocol {
+protocol ObjectStoreProtocol: class {
     associatedtype Object: Identity
+    var objects: [Object] { get set }
+    
     func add(object: Object)
     func remove(object: Object)
-    func objectAtIndex() -> Object
+    func objectAtIndex(index: Int) -> Object
     func count() -> Int
     func allObjects() -> [Object]
 }
 
 //Extend ObjectStore protocol to provide basic implementation for functions
 
-
+extension ObjectStoreProtocol {
+    func add(object: Object) {
+        return objects.append(object)
+    }
+    
+    func remove(object: Object) {
+        self.objects = self.objects.filter({ (objects) -> Bool in
+            return object.id != object.id
+        })
+    }
+    
+    func objectAtIndex(index: Int) -> Object {
+        return objects[index]
+    }
+    
+    func count() -> Int {
+        return self.objects.count
+    }
+    
+    func allObjects() -> [Object] {
+        return self.objects
+    }
+}
 
 //Create Store singleton that will conform to ObjectStore protocol and implement requirements
 
-//class Store: ObjectStoreProtocol {
-//    static let shared = Store()
-//}
+class Store: ObjectStoreProtocol {
+    static let shared = Store()
+    private init() {}
+    typealias Object = Todo
+    
+    var objects = [Object]()
+}
 
 //Demonstrate adding / removing of ToDo items.
 
-//let taskOne = Todo("Buy Beer")
-//let taskTwo = Todo("Drink Beer")
-//let taskThree = Todo("Nap")
-//
-//Store.shared.add(taskOne)
-//Store.shared.add(taskTwo)
-//Store.shared.add(taskThree)
-//
-//Store.shared.remove(taskTwo)
-//
-//for object in Store.shared.allObjects() {
-//    print(object.description)
-//}
+let taskOne = Todo(task: "Buy Beer")
+let taskTwo = Todo(task: "Drink Beer")
+let taskThree = Todo(task: "Nap")
+
+Store.shared.add(taskOne)
+Store.shared.add(taskTwo)
+Store.shared.add(taskThree)
+
+Store.shared.remove(taskTwo)
+
+for object in Store.shared.allObjects() {
+    print("Hey you there, \(object.description)")
+}
