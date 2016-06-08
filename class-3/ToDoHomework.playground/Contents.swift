@@ -18,7 +18,7 @@ class Todo: Identity {
     }
     
     func description() -> String {
-        return "\(self.task)!"
+        return "Hey you there, \(self.task)!"
     }
 }
 
@@ -86,7 +86,7 @@ Store.shared.add(taskThree)
 Store.shared.remove(taskTwo)
 
 for todo in Store.shared.allObjects() {
-    print("Hey you there, \(todo.description)")
+    print(todo.description())
 }
 
 Store.shared.allObjects()
